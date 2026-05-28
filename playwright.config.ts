@@ -11,7 +11,7 @@ export default defineConfig({
   use: {
     video: 'on',
     launchOptions: {
-      slowMo: 1000, 
+      slowMo: 5000, 
     },
     headless: false,
     trace: 'on-first-retry',
