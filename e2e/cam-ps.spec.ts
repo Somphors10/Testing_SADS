@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+//pass
 
 test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
@@ -43,7 +44,9 @@ test('test', async ({ page }) => {
   await nextInDialog.click();
 
 
-  await page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' }).click();
+  const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
+  await expect(dateTextbox).toBeVisible({ timeout: 30000 });
+  await dateTextbox.click();
   await page.getByRole('option', { name: '29' }).click();
     await page.keyboard.press('Escape');
     await page.getByRole('spinbutton', { name: /ចំនួនអ្នកចូលសរុប/ }).first().fill('30');
@@ -57,33 +60,20 @@ test('test', async ({ page }) => {
   await page.getByRole('spinbutton', { name: /គ្រួសារក្រីក្រ/ }).first().fill('5');
   await page.getByRole('spinbutton', { name: /ជនពិការ/ }).first().fill('0');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-  await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-  await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();
-  await page.getByRole('option', { name: 'PS39 កន្លែងលាងដៃ' }).click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).fill('កន្លែងលាងដៃ');
-  await page.locator('li:nth-child(1)').getByRole('spinbutton').last().fill('5');
-  await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
-  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS45\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(1).fill('ការបង្រៀន');
-  await page.locator('li:nth-child(2)').getByRole('spinbutton').last().fill('4');
-  await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
-  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS17\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(2).fill('ធុងសម្រាម');
-  await page.locator('li:nth-child(3)').getByRole('spinbutton').last().fill('3');
-  await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
-  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS06\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(3).fill('សៀវភៅសិក្សាគោល');
-  await page.locator('li:nth-child(4)').getByRole('spinbutton').last().fill('2');
-  await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
-  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS02\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(4).fill('អនាម័យ និងបរិស្ថាន');
-  await page.locator('li:nth-child(5)').getByRole('spinbutton').last().fill('1');
+  const addIndicatorRow = async (indicator: RegExp, brainstorm: string, score: string) => {
+    await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
+    await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+    await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: indicator }).first().click();
+    const currentRow = page.locator('.fi-fo-repeater-item-content').last();
+    await currentRow.getByRole('textbox', { name: 'Brainstorm text' }).fill(brainstorm);
+    await currentRow.getByRole('spinbutton').first().fill(score);
+  };
+
+  await addIndicatorRow(/^PS39\b/, 'កន្លែងលាងដៃ', '5');
+  await addIndicatorRow(/^PS45\b/, 'ការបង្រៀន', '4');
+  await addIndicatorRow(/^PS17\b/, 'ធុងសម្រាម', '3');
+  await addIndicatorRow(/^PS06\b/, 'សៀវភៅសិក្សាគោល', '2');
+  await addIndicatorRow(/^PS02\b/, 'អនាម័យ និងបរិស្ថាន', '1');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   const page1Promise = page.waitForEvent('popup');
