@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-//pass
 
 test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
@@ -9,7 +8,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).click();
   await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('password123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
-  
+
   //Sevice provider
   // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
   // await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
@@ -31,13 +30,13 @@ test('test', async ({ page }) => {
 
   //Vulnerable group
   await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).nth(1).click();
+  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
   await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
   await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 6');
+    .fill('group 2');
 
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
@@ -47,18 +46,31 @@ test('test', async ({ page }) => {
   const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
   await expect(dateTextbox).toBeVisible({ timeout: 30000 });
   await dateTextbox.click();
-  await page.getByRole('option', { name: '29' }).click();
-    await page.keyboard.press('Escape');
-    await page.getByRole('spinbutton', { name: /ចំនួនអ្នកចូលសរុប/ }).first().fill('30');
-  await page.getByRole('spinbutton', { name: /យុវជន/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /ស្ត្រី|ស្រ្តី/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /ចាស់/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /កុមារា/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /កុមារី/ }).first().fill('2');
-  await page.getByRole('spinbutton', { name: /ជនជាតិភាគតិច/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /ជនជាតិដើមភាគតិច/ }).first().fill('0');
-  await page.getByRole('spinbutton', { name: /គ្រួសារក្រីក្រ/ }).first().fill('5');
-  await page.getByRole('spinbutton', { name: /ជនពិការ/ }).first().fill('0');
+  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(2|២)$/ }).first();
+  await expect(day2).toBeVisible();
+  await day2.click();
+  await page.keyboard.press('Escape');
+  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).click();
+  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).fill('30');
+  await page.getByRole('spinbutton', { name: 'យុវជន*' }).click();
+  await page.getByRole('spinbutton', { name: 'យុវជន*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).click();
+  await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).click();
+  await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).click();
+  await page.getByRole('spinbutton', { name: 'កុមារា*' }).click();
+  await page.getByRole('spinbutton', { name: 'កុមារា*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'កុមារី*' }).click();
+  await page.getByRole('spinbutton', { name: 'កុមារី*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).click();
+  await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).click();
+  await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).click();
+  await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).click();
+  await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).fill('5');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   const addIndicatorRow = async (indicator: RegExp, brainstorm: string, score: string) => {
     await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
