@@ -23,7 +23,7 @@ test('test', async ({ page }) => {
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 2');
+    .fill('group 3');
 
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
@@ -107,9 +107,24 @@ test('test', async ({ page }) => {
   await page1.locator('div:nth-child(6) > .grid > div:nth-child(5) > .rating-label').click();
   await page1.locator('form div').filter({ hasText: 'បញ្ជូន' }).click();
   await page1.getByRole('button', { name: 'បញ្ឈប់ការដាក់ពិន្ទុ' }).click();
-  await page1.getByRole('link', { name: 'យល់ព្រម' }).click();
-  await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-  await page.getByRole('button', { name: 'បាទ/ចាស' }).click();
+
+  const agreeOnPopup = page1
+    .locator('.swal2-confirm')
+    .or(page1.getByRole('button', { name: 'យល់ព្រម' }))
+    .or(page1.getByRole('link', { name: 'យល់ព្រម' }));
+  await expect(agreeOnPopup.first()).toBeVisible({ timeout: 15000 });
+  await agreeOnPopup.first().click();
+
+  await expect(page.getByText('សូមស្កេនទីនេះដើម្បីផ្តល់មតិយោបល់')).toBeVisible({ timeout: 30000 });
+  const qrStepNext = page.locator('form').getByRole('button', { name: 'បន្ទាប់', exact: true }).last();
+  await qrStepNext.scrollIntoViewIfNeeded();
+  await expect(qrStepNext).toBeEnabled();
+  await qrStepNext.click();
+
+  const yesButton = page.getByRole('button', { name: 'បាទ/ចាស' });
+  if (await yesButton.isVisible()) {
+    await yesButton.click();
+  }
   const clickVisibleSaveInModal = async () => {
     const saveButton = page.locator('.premium-modal:visible').getByRole('button', { name: 'រក្សាទុក' });
     await expect(saveButton).toBeVisible();
@@ -154,5 +169,10 @@ test('test', async ({ page }) => {
   await fillStep5Row(/HC38/, { strong: 'មានផ្ទៃដីធំទូលាយសម្រាប់រៀបចំជាចំណតយានយន្តជូនប្រជាពលរដ្ឋ និងបុគ្គលិកដែលមកទទួលសេវា', weak: 'មិនទាន់មានដំបូលសម្រាប់ការពារកម្តៅថ្ងៃនិងទឹកភ្លៀង ខ្វះខ្សែរបាំងបែងចែកគំនូសចតឱ្យមានសណ្តាប់ធ្នាប់ និងខ្វះប្រព័ន្ធសន្តិសុខមើលការខុសត្រូវ (ហានិភ័យបាត់បង់)', comment: 'ចង់ឱ្យមានការសាងសង់រោងចតយានយន្តដែលមានដំបូលត្រឹមត្រូវ មានគូសខ្សែចតច្បាស់លាស់ និងមានកាមេរ៉ាសុវត្ថិភាព ឬអ្នកយាមប្រចាំការ' }, '5', '2');
   await fillStep5Row(/HC37/, { strong: 'ទីតាំងរង់ចាំស្ថិតនៅចំកណ្តាល មានខ្យល់អាកាសចេញចូលល្អ និងមានកៅអីវែងៗសម្រាប់ឱ្យអ្នកជំងឺអង្គុយរង់ចាំ', weak: 'ចំនួនកៅអីអង្គុយនៅមានកម្រិតមិនទាន់សមាមាត្រនឹងចំនួនអ្នកជំងឺមកច្រើនក្នុងម៉ោងមមាញឹក ខ្វះកង្ហារបក់កម្តៅ និងគ្មានធុងទឹកស្អាតសម្រាប់បរិភោគឥតគិតថ្លៃ', comment: 'ចង់ឱ្យមានការបន្ថែមចំនួនកៅអីរង់ចាំឱ្យបានច្រើន បំពាក់កង្ហារជញ្ជាំងបន្ថែម និងដាក់ធុងទឹកចម្រោះសម្រាប់ឱ្យអ្នកជំងឺអាចដងពិសារកំឡុងពេលរង់ចាំ' }, '1', '2');
   await page.getByRole('button', { name: 'បញ្ចប់' }).click();
-  await page.getByRole('button', { name: 'យល់ព្រម' }).click();
+  const finalAgree = page
+    .locator('.swal2-confirm')
+    .or(page.getByRole('button', { name: 'យល់ព្រម' }))
+    .or(page.getByRole('link', { name: 'យល់ព្រម' }));
+  await expect(finalAgree.first()).toBeVisible({ timeout: 15000 });
+  await finalAgree.first().click();
 });
