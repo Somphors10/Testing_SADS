@@ -15,32 +15,32 @@ test('test', async ({ page }) => {
   // await page.getByRole('table').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ អ្នកផ្តល់សេវា' }).click();
 
   //Citizen
-  // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  // await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
-  // await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
-  // await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
-  // const groupDialog = page.getByRole('dialog');
-  // await groupDialog
-  //   .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-  //   .fill('group 1');
-
-  // const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
-  // await expect(nextInDialog).toBeEnabled();
-  // await nextInDialog.click();
-
-  //Vulnerable group
-  await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
-  await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
-  await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
+  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).nth(1).click();
+  await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 2');
+    .fill('group 1');
 
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
   await nextInDialog.click();
+
+  //Vulnerable group
+  // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
+  // await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
+  // await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  // await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  // const groupDialog = page.getByRole('dialog');
+  // await groupDialog
+  //   .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
+  //   .fill('group 2');
+
+  // const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
+  // await expect(nextInDialog).toBeEnabled();
+  // await nextInDialog.click();
 
 
   const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
@@ -50,42 +50,37 @@ test('test', async ({ page }) => {
   await expect(day2).toBeVisible();
   await day2.click();
   await page.keyboard.press('Escape');
-  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).click();
   await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).fill('30');
-  await page.getByRole('spinbutton', { name: 'យុវជន*' }).click();
   await page.getByRole('spinbutton', { name: 'យុវជន*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).click();
   await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).click();
   await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).click();
-  await page.getByRole('spinbutton', { name: 'កុមារា*' }).click();
   await page.getByRole('spinbutton', { name: 'កុមារា*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'កុមារី*' }).click();
   await page.getByRole('spinbutton', { name: 'កុមារី*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).click();
   await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).click();
   await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).click();
   await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).click();
   await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).fill('5');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-  const addIndicatorRow = async (indicator: RegExp, brainstorm: string, score: string) => {
-    await page.getByRole('button', { name: 'បន្ថែមជួរថ្មី' }).click();
-    await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
-    await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: indicator }).first().click();
-    const currentRow = page.locator('.fi-fo-repeater-item-content').last();
-    await currentRow.getByRole('textbox', { name: 'Brainstorm text' }).fill(brainstorm);
-    await currentRow.getByRole('spinbutton').first().fill(score);
-  };
-
-  await addIndicatorRow(/^PS39\b/, 'កន្លែងលាងដៃ', '5');
-  await addIndicatorRow(/^PS45\b/, 'ការបង្រៀន', '4');
-  await addIndicatorRow(/^PS17\b/, 'ធុងសម្រាម', '3');
-  await addIndicatorRow(/^PS06\b/, 'សៀវភៅសិក្សាគោល', '2');
-  await addIndicatorRow(/^PS02\b/, 'អនាម័យ និងបរិស្ថាន', '1');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();
+  await page.getByRole('option', { name: 'PS39 កន្លែងលាងដៃ' }).click();
+  await page.locator('li:nth-child(1)').getByRole('spinbutton').last().fill('5');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS54\b/ }).first().click();
+  await page.locator('li:nth-child(2)').getByRole('spinbutton').last().fill('4');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS17\b/ }).first().click();
+  await page.locator('li:nth-child(3)').getByRole('spinbutton').last().fill('3');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS06\b/ }).first().click();
+  await page.locator('li:nth-child(4)').getByRole('spinbutton').last().fill('2');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS02\b/ }).first().click();
+  await page.locator('li:nth-child(5)').getByRole('spinbutton').last().fill('1');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   const page1Promise = page.waitForEvent('popup');

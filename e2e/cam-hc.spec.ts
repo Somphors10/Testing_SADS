@@ -17,13 +17,13 @@ test('test', async ({ page }) => {
 
   //Citizen
   await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).nth(1).click();
+  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
   await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
   await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 3');
+    .fill('group 2');
 
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
@@ -46,7 +46,7 @@ test('test', async ({ page }) => {
   const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
   await expect(dateTextbox).toBeVisible({ timeout: 30000 });
   await dateTextbox.click();
-  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(2|២)$/ }).first();
+  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(5|៥)$/ }).first();
   await expect(day2).toBeVisible();
   await day2.click();
   await page.keyboard.press('Escape');
@@ -64,27 +64,22 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();
   await page.getByRole('option', { name: 'HC40 ឯកសណ្ថាន' }).click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).fill('ឯកសណ្ថាន');
   await page.locator('li:nth-child(1)').getByRole('spinbutton').last().fill('5');
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^HC05\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(1).fill('ឡដុតសម្រាម');
   await page.locator('li:nth-child(2)').getByRole('spinbutton').last().fill('4');
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^HC06\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(2).fill('សេវាសង្រ្គោះបន្ទាន់');
   await page.locator('li:nth-child(3)').getByRole('spinbutton').last().fill('3');
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^HC38\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(3).fill('កន្លែងដាក់ កង់ ម៉ូតូ ឡាន');
   await page.locator('li:nth-child(4)').getByRole('spinbutton').last().fill('2');
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^HC37\b/ }).first().click();
-  await page.getByRole('textbox', { name: 'Brainstorm text' }).nth(4).fill('កន្លែងរង់ចាំ');
   await page.locator('li:nth-child(5)').getByRole('spinbutton').last().fill('1');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
@@ -112,8 +107,8 @@ test('test', async ({ page }) => {
   await page1.locator('div:nth-child(6) > .grid > div:nth-child(5) > .rating-label').click();
   await page1.locator('form div').filter({ hasText: 'បញ្ជូន' }).click();
   await page1.getByRole('button', { name: 'បញ្ឈប់ការដាក់ពិន្ទុ' }).click();
-  await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page1.getByRole('link', { name: 'យល់ព្រម' }).click();
+  await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បាទ/ចាស' }).click();
   const clickVisibleSaveInModal = async () => {
     const saveButton = page.locator('.premium-modal:visible').getByRole('button', { name: 'រក្សាទុក' });
