@@ -6,45 +6,45 @@ test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
   await page.goto('https://sads.finztrust.com/admin/login');
 
-  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('admin');
-  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('password123');
+  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafbl');
+  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafbl123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
 
   //Service provider
   // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  // await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
+  // await page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' }).first().click();
   // await page.getByRole('table').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ អ្នកផ្តល់សេវា' }).click();
 
   //Citizen
-  // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  // await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
-  // await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
-  // await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
-  // const groupDialog = page.getByRole('dialog');
-  // await groupDialog
-  //   .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-  //   .fill('group 4');
-  // const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
-  // await expect(nextInDialog).toBeEnabled();
-  // await nextInDialog.click();
-
-  //Vulnerable group
   await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-  await page.getByRole('button', { name: 'បង្កើតទម្រង់ដាក់ពិន្ទុ' }).first().click();
-  await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
-  await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  await page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' }).first().click();
+  await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 3');
+    .fill('group 1');
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
   await nextInDialog.click();
 
+  //Vulnerable group
+  // await page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
+  // await page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' }).first().click();
+  // await page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  // await page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ក្រុមជនងាយរងគ្រោះ' }).click();
+  // const groupDialog = page.getByRole('dialog');
+  // await groupDialog
+  //   .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
+  //   .fill('group 1');
+  // const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
+  // await expect(nextInDialog).toBeEnabled();
+  // await nextInDialog.click();
+
   const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
   await expect(dateTextbox).toBeVisible({ timeout: 30000 });
   await dateTextbox.click();
-  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(5|៥)$/ }).first();
+  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(10|១០)$/ }).first();
   await expect(day2).toBeVisible();
   await day2.click();
   await page.keyboard.press('Escape');
