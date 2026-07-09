@@ -6,8 +6,8 @@ test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
   await page.goto('https://sads.finztrust.com/admin/login');
 
-  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp');
-  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp123');
+  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp1');
+  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp1123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
 
   //Sevice provider
@@ -43,14 +43,10 @@ test('test', async ({ page }) => {
   // await expect(nextInDialog).toBeEnabled();
   // await nextInDialog.click();
 
-  const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
-  await expect(dateTextbox).toBeVisible({ timeout: 30000 });
-  await dateTextbox.click();
-  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(10|១០)$/ }).first();
-  await expect(day2).toBeVisible();
-  await day2.click();
+  await page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' }).click();
+  await page.getByRole('option', { name: '6', exact: true }).click();
   await page.keyboard.press('Escape');
-  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).fill('30');
+  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួមសរុប*' }).fill('30');
   await page.getByRole('spinbutton', { name: 'យុវជន*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).fill('5');
@@ -59,7 +55,7 @@ test('test', async ({ page }) => {
   await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ជនមានពិការភាព*' }).fill('5');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
   await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();

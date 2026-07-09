@@ -6,8 +6,8 @@ test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
   await page.goto('https://sads.finztrust.com/admin/login');
 
-  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafbl');
-  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafbl123');
+  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp');
+  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
 
   //Service provider
@@ -41,14 +41,10 @@ test('test', async ({ page }) => {
   // await expect(nextInDialog).toBeEnabled();
   // await nextInDialog.click();
 
-  const dateTextbox = page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' });
-  await expect(dateTextbox).toBeVisible({ timeout: 30000 });
-  await dateTextbox.click();
-  const day2 = page.locator('[role="option"]:visible').filter({ hasText: /^(10|១០)$/ }).first();
-  await expect(day2).toBeVisible();
-  await day2.click();
+  await page.getByRole('textbox', { name: 'កាលបរិច្ឆេទដាក់ពិន្ទុ*' }).click();
+  await page.getByRole('option', { name: '6', exact: true }).click();
   await page.keyboard.press('Escape');
-  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួម*' }).fill('30');
+  await page.getByRole('spinbutton', { name: 'ចំនួនអ្នកចូលរួមសរុប*' }).fill('30');
   await page.getByRole('spinbutton', { name: 'យុវជន*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ស្រ្តី*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ចាស់ជរា*' }).fill('5');
@@ -57,26 +53,55 @@ test('test', async ({ page }) => {
   await page.getByRole('spinbutton', { name: 'ជនជាតិភាគតិច*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ជនជាតិដើមភាគតិច*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).fill('5');
-  await page.getByRole('spinbutton', { name: 'ជនពិការ*' }).fill('5');
+  await page.getByRole('spinbutton', { name: 'ជនមានពិការភាព*' }).fill('5');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();
+
+  const indicatorPickers = () =>
+    page.locator('form').getByRole('button', {
+      name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ',
+      exact: true,
+    });
+
+  const clickAddCriteriaRow = async () => {
+    const pickers = indicatorPickers();
+    const beforeCount = await pickers.count();
+    const addButton = page.locator('form').getByRole('button', { name: 'បន្ថែមថ្មី' }).last();
+    await page.keyboard.press('Escape');
+    await addButton.scrollIntoViewIfNeeded();
+    await expect(addButton).toBeEnabled();
+    try {
+      await addButton.click({ timeout: 15000 });
+    } catch {
+      await addButton.click({ force: true });
+    }
+    await expect(pickers).toHaveCount(beforeCount + 1, { timeout: 15000 });
+  };
+
+  const clickIndicatorPicker = async (index: 'first' | 'last') => {
+    const picker = index === 'first' ? indicatorPickers().first() : indicatorPickers().last();
+    await picker.scrollIntoViewIfNeeded();
+    await expect(picker).toBeVisible();
+    await picker.click();
+  };
+
+  await clickAddCriteriaRow();
+  await clickIndicatorPicker('first');
   await page.getByRole('option', { name: 'PS39 កន្លែងលាងដៃ' }).click();
   await page.locator('li:nth-child(1)').getByRole('spinbutton').last().fill('5');
-  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await clickAddCriteriaRow();
+  await clickIndicatorPicker('last');
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS50\b/ }).first().click();
   await page.locator('li:nth-child(2)').getByRole('spinbutton').last().fill('4');
-  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await clickAddCriteriaRow();
+  await clickIndicatorPicker('last');
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS17\b/ }).first().click();
   await page.locator('li:nth-child(3)').getByRole('spinbutton').last().fill('3');
-  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await clickAddCriteriaRow();
+  await clickIndicatorPicker('last');
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS33\b/ }).first().click();
   await page.locator('li:nth-child(4)').getByRole('spinbutton').last().fill('2');
-  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
-  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
+  await clickAddCriteriaRow();
+  await clickIndicatorPicker('last');
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS19\b/ }).first().click();
   await page.locator('li:nth-child(5)').getByRole('spinbutton').last().fill('1');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
