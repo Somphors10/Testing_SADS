@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+//pass
 
 test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
@@ -22,7 +23,7 @@ test('test', async ({ page }) => {
   const groupDialog = page.getByRole('dialog');
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-    .fill('group 2');
+    .fill('group 3');
 
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
@@ -79,29 +80,27 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
   const page1Promise = page.waitForEvent('popup');
-  await page.getByRole('link', { name: 'ដំណើរការដាក់ពិន្ទុ' }).click();
+    await page.getByRole('link', { name: 'ដំណើរការដាក់ពិន្ទុ' }).click();
   const page1 = await page1Promise;
-
-  const rateVisibleQuestions = async (ratingNth = 1) => {
-    const questions = page1.locator('form > div').filter({ has: page1.locator('.grid .rating-label') });
-    await expect(questions.first()).toBeVisible({ timeout: 15000 });
-    for (let i = 0; i < (await questions.count()); i++) {
-      const rating = questions.nth(i).locator('.grid .rating-label').nth(ratingNth);
-      await rating.scrollIntoViewIfNeeded();
-      await rating.click();
-    }
-  };
-
   await page1.locator('label').nth(2).click();
-  await rateVisibleQuestions(1);
+  await page1.locator('div:nth-child(3) > .grid > div:nth-child(2) > .rating-label').click();
+  await page1.locator('div:nth-child(4) > .grid > div:nth-child(3) > .rating-label').click();
+  await page1.locator('div:nth-child(5) > .grid > div:nth-child(2) > .rating-label').click();
+  await page1.locator('div:nth-child(6) > .grid > div:nth-child(3) > .rating-label').click();
   await page1.locator('form div').filter({ hasText: 'បញ្ជូន' }).click();
   await page1.getByRole('link', { name: 'បន្ថែមការដាក់ពិន្ទុ' }).click();
   await page1.locator('label').nth(3).click();
-  await rateVisibleQuestions(2);
+  await page1.locator('div:nth-child(3) > .grid > div:nth-child(3) > .rating-label').click();
+  await page1.locator('div:nth-child(4) > .grid > div:nth-child(4) > .rating-label').click();
+  await page1.locator('div:nth-child(5) > .grid > div:nth-child(3) > .rating-label').click();
+  await page1.locator('div:nth-child(6) > .grid > div:nth-child(4) > .rating-label').click();
   await page1.getByRole('button', { name: 'បញ្ជូន' }).click();
   await page1.getByRole('link', { name: 'បន្ថែមការដាក់ពិន្ទុ' }).click();
   await page1.locator('label').first().click();
-  await rateVisibleQuestions(1);
+  await page1.locator('div:nth-child(3) > .grid > div:nth-child(2) > .rating-label').click();
+  await page1.locator('div:nth-child(4) > .grid > div:nth-child(3) > .rating-label').click();
+  await page1.locator('div:nth-child(5) > .grid > div:nth-child(4) > .rating-label').click();
+  await page1.locator('div:nth-child(6) > .grid > div:nth-child(5) > .rating-label').click();
   await page1.locator('form div').filter({ hasText: 'បញ្ជូន' }).click();
   await page1.getByRole('button', { name: 'បញ្ឈប់ការដាក់ពិន្ទុ' }).click();
 
