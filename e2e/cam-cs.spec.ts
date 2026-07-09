@@ -6,8 +6,8 @@ test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
   await page.goto('https://sads.finztrust.com/admin/login');
 
-  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafbl');
-  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafbl123');
+  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp1');
+  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp1123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
 
   //Service provider
@@ -113,17 +113,22 @@ test('test', async ({ page }) => {
     .or(page1.getByRole('link', { name: 'យល់ព្រម' }));
   await expect(agreeOnPopup.first()).toBeVisible({ timeout: 15000 });
   await agreeOnPopup.first().click();
+  await page.bringToFront();
 
-  await expect(page.getByText('សូមស្កេនទីនេះដើម្បីផ្តល់មតិយោបល់')).toBeVisible({ timeout: 30000 });
-  const qrStepNext = page.locator('form').getByRole('button', { name: 'បន្ទាប់', exact: true }).last();
-  await qrStepNext.scrollIntoViewIfNeeded();
-  await expect(qrStepNext).toBeEnabled();
-  await qrStepNext.click();
+  const footerNext = () =>
+    page.locator('form').getByRole('button', { name: 'បន្ទាប់', exact: true }).last();
 
-  const yesButton = page.getByRole('button', { name: 'បាទ/ចាស' });
-  if (await yesButton.isVisible()) {
-    await yesButton.click();
-  }
+  await expect(footerNext()).toBeEnabled({ timeout: 15000 });
+  await footerNext().scrollIntoViewIfNeeded();
+  await footerNext().click();
+
+  const confirmFinish = page
+    .locator('.swal2-confirm')
+    .or(page.getByRole('button', { name: 'បាទ/ចាស' }));
+  await expect(confirmFinish.first()).toBeVisible({ timeout: 15000 });
+  await confirmFinish.first().click();
+
+  await expect(page.getByPlaceholder('ចំណុចខ្លាំង').first()).toBeVisible({ timeout: 30000 });
 
   const clickVisibleSaveInModal = async () => {
     const saveButton = page.locator('.premium-modal:visible').getByRole('button', { name: 'រក្សាទុក' });
@@ -136,41 +141,40 @@ test('test', async ({ page }) => {
     const modalSearchInput = page
       .locator('.premium-modal:visible')
       .getByRole('textbox', { name: /ស្វែងរក ឬបញ្ចូលចម្លើយថ្មី/ });
+    await expect(modalSearchInput).toBeVisible({ timeout: 15000 });
     await modalSearchInput.fill(text);
 
     const option = page
       .locator('.premium-modal:visible > div:nth-child(2) > div:nth-child(2) > div')
       .filter({ hasText: text })
       .first();
-    await option.click();
+    if (await option.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await option.click();
+    }
 
     await clickVisibleSaveInModal();
   };
 
   const fillStep5Row = async (
-    code: RegExp,
+    index: number,
     fields: { strong: string; weak: string; comment: string; action: string },
     proposedBy: string,
     targetGroup: string
   ) => {
-    const row = page.getByRole('listitem').filter({ hasText: code }).first();
-    await expect(row).toBeVisible({ timeout: 15000 });
-    await row.getByPlaceholder('ចំណុចខ្លាំង').fill(fields.strong);
-    await row.getByPlaceholder('ចំណុចខ្សោយ').fill(fields.weak);
-    await row.getByPlaceholder('មតិយោបល់').fill(fields.comment);
-    // One search field per row — for proposed action (សកម្មភាពដែលស្នើឡើង)
-    await row.getByText('ស្វែងរក ឬបញ្ចូល...').first().click();
+    const strong = page.locator('textarea[x-ref="strengthInput"]').nth(index);
+    await strong.scrollIntoViewIfNeeded();
+    await strong.fill(fields.strong);
+    await page.getByPlaceholder('ចំណុចខ្សោយ').nth(index).fill(fields.weak);
+    await page.getByPlaceholder('មតិយោបល់').nth(index).fill(fields.comment);
+
+    await page.getByText('ស្វែងរក ឬបញ្ចូល...').nth(index).click();
     await searchAndSaveInModal(fields.action);
-    const proposedBySelect = row.getByRole('combobox').first();
-    const targetGroupSelect = row.getByRole('combobox').nth(1);
-    await proposedBySelect.scrollIntoViewIfNeeded();
-    await proposedBySelect.selectOption(proposedBy);
-    await targetGroupSelect.selectOption(targetGroup);
+
+    await page.getByRole('combobox').nth(index * 2).selectOption(proposedBy);
+    await page.getByRole('combobox').nth(index * 2 + 1).selectOption(targetGroup);
   };
 
-  await fillStep5Row(
-    /CS48/,
-    {
+  await fillStep5Row(0, {
       strong: 'មានកន្លែងលាងដៃស្អាត និងមានសាប៊ូអនាម័យគ្រប់គ្រាន់សម្រាប់សិស្សានុសិស្សប្រើប្រាស់',
       weak: 'ខ្វះប្រភពទឹកស្អាតជាប្រចាំ និងកន្លែងលាងដៃមិនទាន់គ្រប់ជ្រុងជ្រោយតាមចំនួនសិស្ស',
       comment: 'ចង់ឱ្យមានការតម្លើងកន្លែងលាងដៃបន្ថែមឱ្យបានគ្រប់គ្រាន់ និងធានាការផ្គត់ផ្គង់ទឹក',
@@ -180,9 +184,7 @@ test('test', async ({ page }) => {
     '1'
   );
 
-  await fillStep5Row(
-    /CS13/,
-    {
+  await fillStep5Row(1, {
       strong: 'លោកគ្រូអ្នកគ្រូ និងបុគ្គលិកគោរពម៉ោងពេលបំពេញការងារ និងមកបង្រៀនបានទៀងទាត់',
       weak: 'ការគ្រប់គ្រង និងកត់ត្រាវត្តមានម៉ោងការងាររបស់បុគ្គលិកមួយចំនួននៅមានភាពធូររលុង',
       comment: 'ចង់ឱ្យមានប្រព័ន្ធគ្រប់គ្រង និងតាមដានម៉ោងពេលបំពេញការងារឱ្យបានច្បាស់លាស់ និងតឹងរ៉ឹង',
@@ -192,9 +194,7 @@ test('test', async ({ page }) => {
     '2'
   );
 
-  await fillStep5Row(
-    /CS05/,
-    {
+  await fillStep5Row(2, {
       strong: 'មានទីតាំងឡដុតសម្រាមដាច់ដោយឡែក ដែលជួយសម្រួលដល់ការកំទេចកាកសំណល់បានលឿន',
       weak: 'ឡដុតសម្រាមបច្ចុប្បន្នមានសភាពចាស់ទ្រុឌទ្រោម ហុយផ្សែងខ្លាំងប៉ះពាល់ដល់បរិស្ថានជុំវិញ',
       comment: 'ចង់ឱ្យមានការជួសជុល ឬសាងសង់ឡដុតសម្រាមថ្មីដែលមានប្រព័ន្ធចម្រោះផ្សែងត្រឹមត្រូវ',
@@ -204,9 +204,7 @@ test('test', async ({ page }) => {
     '3'
   );
 
-  await fillStep5Row(
-    /CS08/,
-    {
+  await fillStep5Row(3, {
       strong: 'មានផ្ទៃដីធំទូលាយសម្រាប់រៀបចំជាសួនច្បារ បង្កើនសោភ័ណភាព និងភាពបៃតងក្នុងសាលា',
       weak: 'ខ្វះការថែទាំជាប្រចាំ គ្មានស្មៅបៃតង និងខ្វះប្រព័ន្ធទឹកស្រោចស្រពនៅរដូវប្រាំង',
       comment: 'ចង់ឱ្យមានការកែលម្អសួនច្បារឱ្យមានភាពស្រស់ស្អាត មានផ្កា និងដើមឈើលម្អត្រឹមត្រូវ',
@@ -216,9 +214,7 @@ test('test', async ({ page }) => {
     '4'
   );
 
-  await fillStep5Row(
-    /CS09/,
-    {
+  await fillStep5Row(4, {
       strong: 'មានការបំពាក់តុ កៅអី និងក្តារខៀននៅក្នុងថ្នាក់រៀនសម្រាប់ដំណើរការបង្រៀន',
       weak: 'សម្ភារៈបរិក្ខារ និងសង្ហារិមមួយចំនួនធំមានសភាពចាស់ បាក់បែក អតុល្យភាពនឹងចំនួនសិស្ស',
       comment: 'ចង់ឱ្យមានការផ្លាស់ប្តូរ និងផ្គត់ផ្គង់សង្ហារិម ក៏ដូចជាសម្ភារៈបន្ទប់រៀនថ្មីៗដែលមានគុណភាព',

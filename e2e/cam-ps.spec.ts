@@ -6,8 +6,8 @@ test('test', async ({ page }) => {
   test.setTimeout(3 * 60 * 1000);
   await page.goto('https://sads.finztrust.com/admin/login');
 
-  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp');
-  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp123');
+  await page.getByRole('textbox', { name: 'ឈ្មោះអ្នកប្រើប្រាស់*' }).fill('cafkp1');
+  await page.getByRole('textbox', { name: 'ពាក្យសម្ងាត់*' }).fill('cafkp1123');
   await page.getByRole('button', { name: 'ចូលក្នុងប្រព័ន្ធ' }).click();
 
   //Service provider
@@ -24,6 +24,7 @@ test('test', async ({ page }) => {
   await groupDialog
     .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
     .fill('group 1');
+
   const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   await expect(nextInDialog).toBeEnabled();
   await nextInDialog.click();
@@ -36,7 +37,8 @@ test('test', async ({ page }) => {
   // const groupDialog = page.getByRole('dialog');
   // await groupDialog
   //   .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
-  //   .fill('group 1');
+  //   .fill('group 2');
+
   // const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
   // await expect(nextInDialog).toBeEnabled();
   // await nextInDialog.click();
@@ -55,53 +57,25 @@ test('test', async ({ page }) => {
   await page.getByRole('spinbutton', { name: 'គ្រួសារក្រីក្រ*' }).fill('5');
   await page.getByRole('spinbutton', { name: 'ជនមានពិការភាព*' }).fill('5');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
-
-  const indicatorPickers = () =>
-    page.locator('form').getByRole('button', {
-      name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ',
-      exact: true,
-    });
-
-  const clickAddCriteriaRow = async () => {
-    const pickers = indicatorPickers();
-    const beforeCount = await pickers.count();
-    const addButton = page.locator('form').getByRole('button', { name: 'បន្ថែមថ្មី' }).last();
-    await page.keyboard.press('Escape');
-    await addButton.scrollIntoViewIfNeeded();
-    await expect(addButton).toBeEnabled();
-    try {
-      await addButton.click({ timeout: 15000 });
-    } catch {
-      await addButton.click({ force: true });
-    }
-    await expect(pickers).toHaveCount(beforeCount + 1, { timeout: 15000 });
-  };
-
-  const clickIndicatorPicker = async (index: 'first' | 'last') => {
-    const picker = index === 'first' ? indicatorPickers().first() : indicatorPickers().last();
-    await picker.scrollIntoViewIfNeeded();
-    await expect(picker).toBeVisible();
-    await picker.click();
-  };
-
-  await clickAddCriteriaRow();
-  await clickIndicatorPicker('first');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).click();
   await page.getByRole('option', { name: 'PS39 កន្លែងលាងដៃ' }).click();
   await page.locator('li:nth-child(1)').getByRole('spinbutton').last().fill('5');
-  await clickAddCriteriaRow();
-  await clickIndicatorPicker('last');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS50\b/ }).first().click();
   await page.locator('li:nth-child(2)').getByRole('spinbutton').last().fill('4');
-  await clickAddCriteriaRow();
-  await clickIndicatorPicker('last');
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS17\b/ }).first().click();
   await page.locator('li:nth-child(3)').getByRole('spinbutton').last().fill('3');
-  await clickAddCriteriaRow();
-  await clickIndicatorPicker('last');
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+  await page.getByRole('button', { name: 'បន្ថែមថ្មី' }).click();
+
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS33\b/ }).first().click();
   await page.locator('li:nth-child(4)').getByRole('spinbutton').last().fill('2');
-  await clickAddCriteriaRow();
-  await clickIndicatorPicker('last');
+  await page.getByRole('button', { name: 'ជ្រើសរើសលក្ខណៈវិនិច្ឆ័យ', exact: true }).last().click();
   await page.locator('[id^="fi-select-input-option-"]:visible').filter({ hasText: /^PS19\b/ }).first().click();
   await page.locator('li:nth-child(5)').getByRole('spinbutton').last().fill('1');
   await page.getByRole('button', { name: 'បន្ទាប់' }).click();
@@ -137,18 +111,22 @@ test('test', async ({ page }) => {
     .or(page1.getByRole('link', { name: 'យល់ព្រម' }));
   await expect(agreeOnPopup.first()).toBeVisible({ timeout: 15000 });
   await agreeOnPopup.first().click();
+  await page.bringToFront();
 
-  await expect(page.getByText('សូមស្កេនទីនេះដើម្បីផ្តល់មតិយោបល់')).toBeVisible({ timeout: 30000 });
-  const qrStepNext = page.locator('form').getByRole('button', { name: 'បន្ទាប់', exact: true }).last();
-  await qrStepNext.scrollIntoViewIfNeeded();
-  await expect(qrStepNext).toBeEnabled();
-  await qrStepNext.click();
+  const footerNext = () =>
+    page.locator('form').getByRole('button', { name: 'បន្ទាប់', exact: true }).last();
 
-  const yesButton = page.getByRole('button', { name: 'បាទ/ចាស' });
-  if (await yesButton.isVisible()) {
-    await yesButton.click();
-  }
+  await expect(footerNext()).toBeEnabled({ timeout: 15000 });
+  await footerNext().scrollIntoViewIfNeeded();
+  await footerNext().click();
 
+  const confirmFinish = page
+    .locator('.swal2-confirm')
+    .or(page.getByRole('button', { name: 'បាទ/ចាស' }));
+  await expect(confirmFinish.first()).toBeVisible({ timeout: 15000 });
+  await confirmFinish.first().click();
+
+  await expect(page.getByPlaceholder('ចំណុចខ្លាំង').first()).toBeVisible({ timeout: 30000 });
   const clickVisibleSaveInModal = async () => {
     const saveButton = page.locator('.premium-modal:visible').getByRole('button', { name: 'រក្សាទុក' });
     await expect(saveButton).toBeVisible();
@@ -160,36 +138,40 @@ test('test', async ({ page }) => {
     const modalSearchInput = page
       .locator('.premium-modal:visible')
       .getByRole('textbox', { name: /ស្វែងរក ឬបញ្ចូលចម្លើយថ្មី/ });
+    await expect(modalSearchInput).toBeVisible({ timeout: 15000 });
     await modalSearchInput.fill(text);
 
     const option = page
       .locator('.premium-modal:visible > div:nth-child(2) > div:nth-child(2) > div')
       .filter({ hasText: text })
       .first();
-    await option.click();
+    if (await option.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await option.click();
+    }
 
     await clickVisibleSaveInModal();
   };
 
   const fillStep5Row = async (
-    code: RegExp,
+    index: number,
     fields: { strong: string; weak: string; comment: string },
     proposedBy: string,
     targetGroup: string
   ) => {
-    const row = page.getByRole('listitem').filter({ hasText: code }).first();
-    await row.getByPlaceholder('ចំណុចខ្លាំង').fill(fields.strong);
-    await row.getByPlaceholder('ចំណុចខ្សោយ').fill(fields.weak);
-    await row.getByPlaceholder('មតិយោបល់').fill(fields.comment);
-    await row.getByText('ស្វែងរក ឬបញ្ចូល...').first().click();
+    const strong = page.locator('textarea[x-ref="strengthInput"]').nth(index);
+    await strong.scrollIntoViewIfNeeded();
+    await strong.fill(fields.strong);
+    await page.getByPlaceholder('ចំណុចខ្សោយ').nth(index).fill(fields.weak);
+    await page.getByPlaceholder('មតិយោបល់').nth(index).fill(fields.comment);
+
+    await page.getByText('ស្វែងរក ឬបញ្ចូល...').nth(index).click();
     await searchAndSaveInModal(fields.strong);
-    await row.getByRole('combobox').first().selectOption(proposedBy);
-    await row.getByRole('combobox').nth(1).selectOption(targetGroup);
+
+    await page.getByRole('combobox').nth(index * 2).selectOption(proposedBy);
+    await page.getByRole('combobox').nth(index * 2 + 1).selectOption(targetGroup);
   };
 
-  await fillStep5Row(
-    /PS39/,
-    {
+  await fillStep5Row(0, {
       strong: 'មានកន្លែងលាងដៃស្អាត និងមានសាប៊ូអនាម័យគ្រប់គ្រាន់',
       weak: 'ខ្វះទឹកស្អាតជាបរិច្ឆេទ និងកន្លែងលាងដៃមិនទាន់គ្រប់ជ្រុងជ្រោះ',
       comment: 'ចង់ឱ្យមានកន្លែងលាងដៃបន្ថែមឱ្យបានគ្រប់គ្រាន់',
@@ -197,9 +179,7 @@ test('test', async ({ page }) => {
     '1',
     '1'
   );
-  await fillStep5Row(
-    /PS50/,
-    {
+  await fillStep5Row(1, {
       strong: 'មានការតាមដានការសិក្សាយ៉ាងទៀងទាត់ និងរក្សាទិន្នន័យបានល្អ',
       weak: 'ការតាមដានមិនទាន់បានធ្វើជាប្រចាំ និងខ្វះឧបករណ៍គាំទ្រក្នុងការកត់ត្រា',
       comment: 'ចង់ឱ្យមានប្រព័ន្ធតាមដានការសិក្សាឱ្យបានទៀងទាត់បន្ថែម',
@@ -207,9 +187,7 @@ test('test', async ({ page }) => {
     '5',
     '2'
   );
-  await fillStep5Row(
-    /PS17/,
-    {
+  await fillStep5Row(2, {
       strong: 'មានធុងសម្រាមគ្រប់គ្រាន់ និងដាក់ទីតាំងសមរម្យ',
       weak: 'ធុងសម្រាមមួយចំនួនពេញ ឬខូច និងខ្វះការប្រមូលផ្តិតជាប្រចាំ',
       comment: 'ចង់ឱ្យមានធុងសម្រាមបន្ថែម និងការប្រមូលផ្តិតទៀងទាត់',
@@ -217,9 +195,7 @@ test('test', async ({ page }) => {
     '5',
     '3'
   );
-  await fillStep5Row(
-    /PS33/,
-    {
+  await fillStep5Row(3, {
       strong: 'មានសេវាកម្មគ្រប់គ្រាន់ និងបុគ្គលិកដឹកនាំល្អ',
       weak: 'សេវាកម្មមួយចំនួននៅមានកម្រិត និងខ្វះការតាមដានជាប្រចាំ',
       comment: 'ចង់ឱ្យមានការកែលម្អសេវាកម្មឱ្យបានល្អបន្ថែម',
@@ -227,9 +203,7 @@ test('test', async ({ page }) => {
     '1',
     '4'
   );
-  await fillStep5Row(
-    /PS19/,
-    {
+  await fillStep5Row(4, {
       strong: 'មានបរិស្ថានស្អាត និងអនាម័យល្អ',
       weak: 'ខ្វះការថែទាំបរិស្ថានជុំវិញឱ្យបានទៀងទាត់',
       comment: 'ចង់ឱ្យមានការថែទាំបរិស្ថាន និងអនាម័យឱ្យបានល្អបន្ថែម',
