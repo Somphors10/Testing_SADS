@@ -1,15 +1,51 @@
 import { expect, Page } from '@playwright/test';
-import { CriteriaRow, Step5Row } from './types';
+import {
+  CriteriaRow,
+  SCORECARD_LABELS,
+  ScorecardNavigation,
+  Step5Row,
+} from './types';
 
 export class ScorecardFormPage {
   constructor(protected readonly page: Page) {}
 
-  async openCitizenScorecard(groupName: string, manageButtonIndex = 2) {
-    await this.page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
-    await this.page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' }).nth(manageButtonIndex).click();
-    await this.page.getByRole('button', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
-    await this.page.getByRole('dialog').getByRole('link', { name: 'បណ្ណដាក់ពិន្ទុ ប្រជាពលរដ្ឋ' }).click();
+  /** Opens one of the 3 scorecard groups — same steps after this. */
+  async openScorecard({
+    group,
+    groupName,
+    manageButtonIndex = 0,
+    fromEvaluationList = false,
+  }: ScorecardNavigation) {
+    const label = SCORECARD_LABELS[group];
 
+    await this.page.getByRole('link', { name: 'ការពិនិត្យវាយតម្លៃអំពីលទ្ធផលការងារ' }).click();
+
+    const manageButton = this.page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' });
+    if (fromEvaluationList) {
+      await expect(manageButton.first()).toBeVisible({ timeout: 15000 });
+      await manageButton.first().click();
+    } else {
+      await manageButton.nth(manageButtonIndex).click();
+    }
+
+    if (group === 'serviceProvider') {
+      await this.page.getByRole('table').getByRole('link', { name: label }).click();
+      return;
+    }
+
+    await this.page.getByRole('button', { name: label }).click();
+    await this.page.getByRole('dialog').getByRole('link', { name: label }).click();
+
+    if (groupName) {
+      await this.fillGroupDialog(groupName);
+    }
+  }
+
+  async openCitizenScorecard(groupName: string, manageButtonIndex = 1) {
+    await this.openScorecard({ group: 'citizen', groupName, manageButtonIndex });
+  }
+
+  private async fillGroupDialog(groupName: string) {
     const groupDialog = this.page.getByRole('dialog');
     await groupDialog
       .getByRole('textbox', { name: 'ឈ្មោះក្រុម (ឧទាហរណ៍៖ ក្រុមទី១...)' })
@@ -18,6 +54,27 @@ export class ScorecardFormPage {
     const nextInDialog = groupDialog.getByRole('button', { name: 'បន្ទាប់' });
     await expect(nextInDialog).toBeEnabled();
     await nextInDialog.click();
+  }
+
+  protected async runScorecardFlow(options: {
+    navigation: ScorecardNavigation;
+    criteriaRows: CriteriaRow[];
+    step5Rows: Step5Row[];
+    useActionField?: boolean;
+    runScoring: (popup: Page) => Promise<void>;
+  }) {
+    await this.openScorecard(options.navigation);
+    await this.fillStep1ParticipantInfo();
+    await this.clickNext();
+    await this.fillCriteriaRows(options.criteriaRows);
+    await this.proceedToScoringLink();
+
+    const popup = await this.openScoringPopup();
+    await options.runScoring(popup);
+    await this.agreeOnScoringPopup(popup);
+    await this.confirmScoringAndGoToStep5();
+    await this.fillAllStep5Rows(options.step5Rows, options.useActionField);
+    await this.finishForm();
   }
 
   async fillStep1ParticipantInfo(day = '6') {
@@ -128,9 +185,13 @@ export class ScorecardFormPage {
     await expect(this.page.getByPlaceholder('ចំណុចខ្លាំង').first()).toBeVisible({ timeout: 30000 });
   }
 
+  private step5ActionSearch(index: number) {
+    return this.page.locator('form').getByText('ស្វែងរក ឬបញ្ចូល...').nth(index);
+  }
+
   private async clickVisibleSaveInModal() {
     const saveButton = this.page.locator('.premium-modal:visible').getByRole('button', { name: 'រក្សាទុក' });
-    await expect(saveButton).toBeVisible();
+    await expect(saveButton).toBeVisible({ timeout: 15000 });
     await saveButton.click();
     await expect(this.page.locator('.premium-modal:visible')).toHaveCount(0);
   }
@@ -163,7 +224,10 @@ export class ScorecardFormPage {
     await this.page.getByPlaceholder('ចំណុចខ្សោយ').nth(index).fill(fields.weak);
     await this.page.getByPlaceholder('មតិយោបល់').nth(index).fill(fields.comment);
 
-    await this.page.getByText('ស្វែងរក ឬបញ្ចូល...').nth(index).click();
+    const actionSearch = this.step5ActionSearch(index);
+    await actionSearch.scrollIntoViewIfNeeded();
+    await expect(actionSearch).toBeVisible({ timeout: 15000 });
+    await actionSearch.click();
     await this.searchAndSaveInModal(searchText);
 
     await this.page.getByRole('combobox').nth(index * 2).selectOption(proposedBy);

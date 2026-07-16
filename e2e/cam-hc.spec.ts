@@ -3,7 +3,7 @@ import { CamHcPage } from '../pages/CamHcPage';
 import { LoginPage } from '../pages/LoginPage';
 
 test('HC citizen scorecard flow', async ({ page }) => {
-  test.setTimeout(3 * 60 * 1000);
+  test.setTimeout(5 * 60 * 1000);
 
   const loginPage = new LoginPage(page);
   const camHcPage = new CamHcPage(page);

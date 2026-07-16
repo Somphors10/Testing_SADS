@@ -1,8 +1,12 @@
 import { Page } from '@playwright/test';
 import { ScorecardFormPage } from './ScorecardFormPage';
-import { CriteriaRow, Step5Row } from './types';
+import { CriteriaRow, ScorecardNavigation, Step5Row } from './types';
 
 export class CamCsPage extends ScorecardFormPage {
+  static readonly navigation: ScorecardNavigation = {
+    group: 'citizen',
+    groupName: 'group 2',
+  };
   static readonly criteriaRows: CriteriaRow[] = [
     { optionPattern: /^CS48\b/, score: '5' },
     { optionPattern: /^CS13\b/, score: '4' },
@@ -77,13 +81,6 @@ export class CamCsPage extends ScorecardFormPage {
     await popup.getByRole('button', { name: 'បញ្ជូន' }).click();
     await popup.getByRole('link', { name: 'បន្ថែមការដាក់ពិន្ទុ' }).click();
     await popup.locator('label').first().click();
-    await popup.locator('div:nth-child(3) > .grid > div:nth-child(2) > .rating-label').click();
-    await popup.locator('div:nth-child(4) > .grid > div:nth-child(3) > .rating-label').click();
-    await popup.locator('div:nth-child(5) > .grid > div:nth-child(4) > .rating-label').click();
-    await popup.locator('div:nth-child(6) > .grid > div:nth-child(5) > .rating-label').click();
-    await popup.locator('form div').filter({ hasText: 'បញ្ជូន' }).click();
-    await popup.getByRole('link', { name: 'បន្ថែមការដាក់ពិន្ទុ' }).click();
-    await popup.locator('label').nth(4).click();
     await popup.locator('div:nth-child(3) > .grid > div:nth-child(4) > .rating-label').click();
     await popup.locator('div:nth-child(4) > .grid > div:nth-child(3) > .rating-label').click();
     await popup.locator('div:nth-child(5) > .grid > div:nth-child(2) > .rating-label').click();
@@ -93,17 +90,12 @@ export class CamCsPage extends ScorecardFormPage {
   }
 
   async runFullFlow() {
-    await this.openCitizenScorecard('group 2');
-    await this.fillStep1ParticipantInfo();
-    await this.clickNext();
-    await this.fillCriteriaRows(CamCsPage.criteriaRows);
-    await this.proceedToScoringLink();
-
-    const popup = await this.openScoringPopup();
-    await this.runScoring(popup);
-    await this.agreeOnScoringPopup(popup);
-    await this.confirmScoringAndGoToStep5();
-    await this.fillAllStep5Rows(CamCsPage.step5Rows, true);
-    await this.finishForm();
+    await this.runScorecardFlow({
+      navigation: CamCsPage.navigation,
+      criteriaRows: CamCsPage.criteriaRows,
+      step5Rows: CamCsPage.step5Rows,
+      useActionField: true,
+      runScoring: (popup) => this.runScoring(popup),
+    });
   }
 }

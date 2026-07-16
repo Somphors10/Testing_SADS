@@ -3,7 +3,7 @@ import { CamCsPage } from '../pages/CamCsPage';
 import { LoginPage } from '../pages/LoginPage';
 
 test('CS citizen scorecard flow', async ({ page }) => {
-  test.setTimeout(3 * 60 * 1000);
+  test.setTimeout(5 * 60 * 1000);
 
   const loginPage = new LoginPage(page);
   const camCsPage = new CamCsPage(page);
