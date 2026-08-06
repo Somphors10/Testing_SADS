@@ -5,11 +5,11 @@ import { CriteriaRow, ScorecardNavigation, Step5Row } from './types';
 export class CamCsPage extends ScorecardFormPage {
   static readonly navigation: ScorecardNavigation = {
     group: 'citizen',
-    groupName: 'group 2',
+    groupName: 'group 1',
   };
   static readonly criteriaRows: CriteriaRow[] = [
     { optionPattern: /^CS48\b/, score: '5' },
-    { optionPattern: /^CS13\b/, score: '4' },
+    { optionPattern: /^CS47\b/, score: '4' },
     { optionPattern: /^CS15\b/, score: '3' },
     { optionPattern: /^CS38\b/, score: '2' },
     { optionPattern: /^CS35\b/, score: '1' },

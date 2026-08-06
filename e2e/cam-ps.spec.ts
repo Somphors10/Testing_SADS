@@ -9,6 +9,6 @@ test('PS citizen scorecard flow', async ({ page }) => {
   const camPsPage = new CamPsPage(page);
 
   await loginPage.goto();
-  await loginPage.login('cafkp1', 'cafkp1123');
+  await loginPage.login('cafbl', 'cafbl123');
   await camPsPage.runFullFlow();
 });

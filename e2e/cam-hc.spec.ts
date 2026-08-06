@@ -9,6 +9,6 @@ test('HC citizen scorecard flow', async ({ page }) => {
   const camHcPage = new CamHcPage(page);
 
   await loginPage.goto();
-  await loginPage.login('cafkp1', 'cafkp1123');
+  await loginPage.login('cafpvh', 'cafpvh123');
   await camHcPage.runFullFlow();
 });

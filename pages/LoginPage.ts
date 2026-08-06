@@ -4,7 +4,7 @@ export class LoginPage {
   constructor(private readonly page: Page) {}
 
   async goto() {
-    await this.page.goto('https://sads.finztrust.com/admin/login');
+    await this.page.goto('https://sads-test.finztrust.com/admin/login');
   }
 
   async login(username: string, password: string) {

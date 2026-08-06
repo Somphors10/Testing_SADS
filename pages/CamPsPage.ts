@@ -4,8 +4,8 @@ import { CriteriaRow, ScorecardNavigation, Step5Row } from './types';
 
 export class CamPsPage extends ScorecardFormPage {
   static readonly navigation: ScorecardNavigation = {
-    group: 'citizen',
-    groupName: 'group 8',
+    group: 'serviceProvider',
+    groupName: 'group 1',
     manageButtonIndex: 0,
     fromEvaluationList: false,
   };
@@ -44,7 +44,7 @@ export class CamPsPage extends ScorecardFormPage {
       },
       proposedBy: '5',
       targetGroup: '3',
-    },
+    }, 
     {
       fields: {
         strong: 'មានសេវាកម្មគ្រប់គ្រាន់ និងបុគ្គលិកដឹកនាំល្អ',

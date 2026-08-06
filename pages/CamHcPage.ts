@@ -5,8 +5,8 @@ import { CriteriaRow, ScorecardNavigation, Step5Row } from './types';
 export class CamHcPage extends ScorecardFormPage {
   static readonly navigation: ScorecardNavigation = {
     group: 'citizen',
-    groupName: 'group 2',
-    manageButtonIndex: 0,
+    groupName: 'group 1',
+    manageButtonIndex: 1,
     fromEvaluationList: true,
   };
   static readonly criteriaRows: CriteriaRow[] = [

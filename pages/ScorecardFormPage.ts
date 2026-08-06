@@ -23,7 +23,7 @@ export class ScorecardFormPage {
     const manageButton = this.page.getByRole('button', { name: 'គ្រប់គ្រងបណ្ណដាក់ពិន្ទុ' });
     if (fromEvaluationList) {
       await expect(manageButton.first()).toBeVisible({ timeout: 15000 });
-      await manageButton.first().click();
+      await manageButton.first().click(); 
     } else {
       await manageButton.nth(manageButtonIndex).click();
     }
@@ -59,7 +59,7 @@ export class ScorecardFormPage {
   protected async runScorecardFlow(options: {
     navigation: ScorecardNavigation;
     criteriaRows: CriteriaRow[];
-    step5Rows: Step5Row[];
+    step5Rows: Step5Row[]; 
     useActionField?: boolean;
     runScoring: (popup: Page) => Promise<void>;
   }) {
@@ -218,11 +218,13 @@ export class ScorecardFormPage {
     const { fields, proposedBy, targetGroup } = row;
     const searchText = modalText ?? fields.action ?? fields.strong;
 
-    const strong = this.page.locator('textarea[x-ref="strengthInput"]').nth(index);
+    const form = this.page.locator('form');
+    const strong = form.getByPlaceholder('ចំណុចខ្លាំង').nth(index);
     await strong.scrollIntoViewIfNeeded();
+    await strong.click();
     await strong.fill(fields.strong);
-    await this.page.getByPlaceholder('ចំណុចខ្សោយ').nth(index).fill(fields.weak);
-    await this.page.getByPlaceholder('មតិយោបល់').nth(index).fill(fields.comment);
+    await form.getByPlaceholder('ចំណុចខ្សោយ').nth(index).fill(fields.weak);
+    await form.getByPlaceholder('មតិយោបល់').nth(index).fill(fields.comment);
 
     const actionSearch = this.step5ActionSearch(index);
     await actionSearch.scrollIntoViewIfNeeded();
@@ -230,8 +232,14 @@ export class ScorecardFormPage {
     await actionSearch.click();
     await this.searchAndSaveInModal(searchText);
 
-    await this.page.getByRole('combobox').nth(index * 2).selectOption(proposedBy);
-    await this.page.getByRole('combobox').nth(index * 2 + 1).selectOption(targetGroup);
+    // Modal save can trigger Livewire re-render — restore strength if cleared
+    if ((await strong.inputValue()) !== fields.strong) {
+      await strong.click();
+      await strong.fill(fields.strong);
+    }
+
+    await form.getByRole('combobox').nth(index * 2).selectOption(proposedBy);
+    await form.getByRole('combobox').nth(index * 2 + 1).selectOption(targetGroup);
   }
 
   async fillAllStep5Rows(rows: Step5Row[], useActionField = false) {
